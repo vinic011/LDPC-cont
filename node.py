@@ -16,13 +16,13 @@ class Node:
 
 class VNode(Node):
     def final_llr(self,llr):
-        return llr+np.sum([e.m for e in self.edges])
+        return self.l_f
 
     def message(self,llr):
         l_e=np.array([e.m for e in self.edges])
-        l_s=llr+np.sum(l_e)-l_e
+        self.l_f=llr+np.sum(l_e)
         for i in  range(len(self.edges)):
-            self.edges[i].m=l_s[i]
+            self.edges[i].m=self.l_f-l_e[i]
     
 
 class CNode(Node):
