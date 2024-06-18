@@ -6,11 +6,13 @@ class Node:
     def __init__(self,idx) -> None:
         self.edges:list[Edge]=[]
         self.idx=idx
+        self.l_f=0
 
     def add_edge(self,e:Edge):
         self.edges.append(e)
 
     def reset(self):
+        self.l_f=0
         for e in self.edges:
             e.reset()
 
@@ -35,7 +37,6 @@ class CNode(Node):
             self.edges[i].m=self._processed_index(i,l_e)
 
     def _processed_index(self,index,llrs):
-        llrs = llrs.copy()
         x=np.delete(llrs, index)
         module = np.min(np.absolute(x))
         sign=np.prod(np.sign(x))

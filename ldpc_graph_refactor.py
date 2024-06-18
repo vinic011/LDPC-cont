@@ -7,12 +7,12 @@ class LdpcGraphRefactor:
         self.c:list[CNode]=[]
         self.v:list[VNode]=[]
         self.max_iterations=max_iterations
-    
+        
     def process(self,llr:np.ndarray):
-        llr = llr.copy()
         for _ in range(self.max_iterations):
             for n in range(len(self.v)):
                 self.v[n].message(llr[n])
+            #Parallel(n_jobs=10)(delayed(self.v[n].message)(llr[n]) for n in range(len(self.v)))
             found=False
             for m in range(len(self.c)):
                 if not self.c[m].check():
@@ -22,11 +22,14 @@ class LdpcGraphRefactor:
                 break
             for c in self.c:
                 c.message()
+            #Parallel(n_jobs=10)(delayed(c.message)() for c in self.c)
         return np.array([self.v[i].final_llr(llr[i]) for i in range(len(self.v))])
     
     def reset(self):
         for v in self.v:
             v.reset()
+        #Parallel(n_jobs=10)(delayed(v.reset)() for v in self.v)
+
 
 
 def from_matrix(H:np.ndarray,max_iterations):
